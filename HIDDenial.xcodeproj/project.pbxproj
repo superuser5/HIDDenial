@@ -1,0 +1,370 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CCD37E3C2622B000003AB6C5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD37E3B2622B000003AB6C5 /* AppDelegate.m */; };
+		CCD37E3F2622B000003AB6C5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD37E3E2622B000003AB6C5 /* ViewController.m */; };
+		CCD37E412622B002003AB6C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CCD37E402622B002003AB6C5 /* Assets.xcassets */; };
+		CCD37E442622B002003AB6C5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CCD37E422622B002003AB6C5 /* Main.storyboard */; };
+		CCD37E472622B002003AB6C5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD37E462622B002003AB6C5 /* main.m */; };
+		CCD37E512622B015003AB6C5 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCD37E502622B015003AB6C5 /* IOKit.framework */; };
+		CCD37E552622B287003AB6C5 /* HIDDenial.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD37E542622B287003AB6C5 /* HIDDenial.m */; };
+		CCD37E592622B36F003AB6C5 /* HIDDeviceData.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD37E582622B36F003AB6C5 /* HIDDeviceData.m */; };
+		CCD37E662622B904003AB6C5 /* HIDDeviceTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD37E652622B904003AB6C5 /* HIDDeviceTableCellView.m */; };
+		CCD37E6D2622C357003AB6C5 /* HIDDenialUtils.c in Sources */ = {isa = PBXBuildFile; fileRef = CCD37E6C2622C357003AB6C5 /* HIDDenialUtils.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		CCD37E372622B000003AB6C5 /* HIDDenial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HIDDenial.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CCD37E3A2622B000003AB6C5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		CCD37E3B2622B000003AB6C5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		CCD37E3D2622B000003AB6C5 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		CCD37E3E2622B000003AB6C5 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		CCD37E402622B002003AB6C5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CCD37E432622B002003AB6C5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		CCD37E452622B002003AB6C5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CCD37E462622B002003AB6C5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		CCD37E482622B002003AB6C5 /* HIDDenial.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HIDDenial.entitlements; sourceTree = "<group>"; };
+		CCD37E502622B015003AB6C5 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		CCD37E532622B287003AB6C5 /* HIDDenial.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HIDDenial.h; sourceTree = "<group>"; };
+		CCD37E542622B287003AB6C5 /* HIDDenial.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HIDDenial.m; sourceTree = "<group>"; };
+		CCD37E572622B36F003AB6C5 /* HIDDeviceData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HIDDeviceData.h; sourceTree = "<group>"; };
+		CCD37E582622B36F003AB6C5 /* HIDDeviceData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HIDDeviceData.m; sourceTree = "<group>"; };
+		CCD37E642622B904003AB6C5 /* HIDDeviceTableCellView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HIDDeviceTableCellView.h; sourceTree = "<group>"; };
+		CCD37E652622B904003AB6C5 /* HIDDeviceTableCellView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HIDDeviceTableCellView.m; sourceTree = "<group>"; };
+		CCD37E6B2622C357003AB6C5 /* HIDDenialUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HIDDenialUtils.h; sourceTree = "<group>"; };
+		CCD37E6C2622C357003AB6C5 /* HIDDenialUtils.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = HIDDenialUtils.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CCD37E342622B000003AB6C5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CCD37E512622B015003AB6C5 /* IOKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CCD37E2E2622B000003AB6C5 = {
+			isa = PBXGroup;
+			children = (
+				CCD37E392622B000003AB6C5 /* HIDDenial */,
+				CCD37E382622B000003AB6C5 /* Products */,
+				CCD37E4F2622B015003AB6C5 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		CCD37E382622B000003AB6C5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CCD37E372622B000003AB6C5 /* HIDDenial.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CCD37E392622B000003AB6C5 /* HIDDenial */ = {
+			isa = PBXGroup;
+			children = (
+				CCD37E6B2622C357003AB6C5 /* HIDDenialUtils.h */,
+				CCD37E6C2622C357003AB6C5 /* HIDDenialUtils.c */,
+				CCD37E3A2622B000003AB6C5 /* AppDelegate.h */,
+				CCD37E3B2622B000003AB6C5 /* AppDelegate.m */,
+				CCD37E3D2622B000003AB6C5 /* ViewController.h */,
+				CCD37E3E2622B000003AB6C5 /* ViewController.m */,
+				CCD37E532622B287003AB6C5 /* HIDDenial.h */,
+				CCD37E542622B287003AB6C5 /* HIDDenial.m */,
+				CCD37E572622B36F003AB6C5 /* HIDDeviceData.h */,
+				CCD37E582622B36F003AB6C5 /* HIDDeviceData.m */,
+				CCD37E642622B904003AB6C5 /* HIDDeviceTableCellView.h */,
+				CCD37E652622B904003AB6C5 /* HIDDeviceTableCellView.m */,
+				CCD37E402622B002003AB6C5 /* Assets.xcassets */,
+				CCD37E422622B002003AB6C5 /* Main.storyboard */,
+				CCD37E452622B002003AB6C5 /* Info.plist */,
+				CCD37E462622B002003AB6C5 /* main.m */,
+				CCD37E482622B002003AB6C5 /* HIDDenial.entitlements */,
+			);
+			path = HIDDenial;
+			sourceTree = "<group>";
+		};
+		CCD37E4F2622B015003AB6C5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CCD37E502622B015003AB6C5 /* IOKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CCD37E362622B000003AB6C5 /* HIDDenial */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CCD37E4B2622B002003AB6C5 /* Build configuration list for PBXNativeTarget "HIDDenial" */;
+			buildPhases = (
+				CCD37E332622B000003AB6C5 /* Sources */,
+				CCD37E342622B000003AB6C5 /* Frameworks */,
+				CCD37E352622B000003AB6C5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HIDDenial;
+			productName = HIDDenial;
+			productReference = CCD37E372622B000003AB6C5 /* HIDDenial.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CCD37E2F2622B000003AB6C5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1230;
+				TargetAttributes = {
+					CCD37E362622B000003AB6C5 = {
+						CreatedOnToolsVersion = 12.3;
+					};
+				};
+			};
+			buildConfigurationList = CCD37E322622B000003AB6C5 /* Build configuration list for PBXProject "HIDDenial" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CCD37E2E2622B000003AB6C5;
+			productRefGroup = CCD37E382622B000003AB6C5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CCD37E362622B000003AB6C5 /* HIDDenial */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CCD37E352622B000003AB6C5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CCD37E412622B002003AB6C5 /* Assets.xcassets in Resources */,
+				CCD37E442622B002003AB6C5 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CCD37E332622B000003AB6C5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CCD37E552622B287003AB6C5 /* HIDDenial.m in Sources */,
+				CCD37E6D2622C357003AB6C5 /* HIDDenialUtils.c in Sources */,
+				CCD37E3F2622B000003AB6C5 /* ViewController.m in Sources */,
+				CCD37E592622B36F003AB6C5 /* HIDDeviceData.m in Sources */,
+				CCD37E662622B904003AB6C5 /* HIDDeviceTableCellView.m in Sources */,
+				CCD37E472622B002003AB6C5 /* main.m in Sources */,
+				CCD37E3C2622B000003AB6C5 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		CCD37E422622B002003AB6C5 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CCD37E432622B002003AB6C5 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		CCD37E492622B002003AB6C5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		CCD37E4A2622B002003AB6C5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		CCD37E4C2622B002003AB6C5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HIDDenial/HIDDenial.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = HIDDenial/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = in.komachin.HIDDenial;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		CCD37E4D2622B002003AB6C5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HIDDenial/HIDDenial.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = HIDDenial/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = in.komachin.HIDDenial;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CCD37E322622B000003AB6C5 /* Build configuration list for PBXProject "HIDDenial" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CCD37E492622B002003AB6C5 /* Debug */,
+				CCD37E4A2622B002003AB6C5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CCD37E4B2622B002003AB6C5 /* Build configuration list for PBXNativeTarget "HIDDenial" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CCD37E4C2622B002003AB6C5 /* Debug */,
+				CCD37E4D2622B002003AB6C5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CCD37E2F2622B000003AB6C5 /* Project object */;
+}
