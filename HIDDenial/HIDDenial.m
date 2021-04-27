@@ -21,14 +21,149 @@ static HIDDenial * instance = nil;
     io_iterator_t rawAddedIter;
     io_iterator_t rawRemovedIter;
     
-    IOHIDManagerRef ioHIDManager;
-    
     BOOL started;
     HIDDenialPolicy globalDefalutPolicy;
 }
-- (IOHIDManagerRef)getIOHIDManager;
+
 - (HIDDenialPolicy)addedHIDDevice:(HIDDeviceData *)dev;
 - (void)removedHIDDevice:(HIDDeviceData *)dev;
+@end
+
+@interface ContinuousHIDWatching : NSObject {
+    NSMutableArray<HIDDeviceData *> * subdevices;
+    NSMutableArray<NSString *> * seenDevices;
+    NSString * name;
+    NSString * manufacturer;
+    IOHIDManagerRef ioHIDManager;
+    NSLock * hidLock;
+    BOOL stop;
+}
+
+- (void)setDeviceName:(const char*)name manufacturer:(const char*)manufacturer;
+- (void)startMonitoringDevice:(IOUSBDeviceInterface**)dev Vendor:(UInt16)vendor product:(UInt16)product;
+
+@end
+
+@implementation ContinuousHIDWatching
+
+- (void)stop {
+    if (ioHIDManager) {
+        [hidLock lock];
+        // Close the HID manager
+        IOHIDManagerClose(ioHIDManager, kIOHIDOptionsTypeNone);
+        CFRelease(ioHIDManager);
+        ioHIDManager = NULL;
+        stop = YES;
+        [hidLock unlock];
+    }
+}
+
+- (void)dealloc {
+    [self stop];
+}
+
+- (void)setDeviceName:(const char*)name manufacturer:(const char*)manufacturer {
+    if (name) {
+        self->name = [NSString stringWithFormat:@"%s", name];
+    }
+    if (manufacturer) {
+        self->manufacturer = [NSString stringWithFormat:@"%s", manufacturer];
+    }
+}
+
+- (void)startMonitoringDevice:(IOUSBDeviceInterface**)dev Vendor:(UInt16)vendor product:(UInt16)product {
+    // Try to match HID S by vendor ID and product ID
+    CFMutableDictionaryRef matching = CFDictionaryCreateMutable(kCFAllocatorDefault,
+                                                                kIOHIDOptionsTypeNone,
+                                                                &kCFTypeDictionaryKeyCallBacks,
+                                                                &kCFTypeDictionaryValueCallBacks);
+    CFNumberRef v = CFNumberCreate(kCFAllocatorDefault, kCFNumberShortType, &vendor);
+    CFDictionarySetValue(matching, CFSTR(kIOHIDVendorIDKey), v);
+    CFRelease(v);
+    CFNumberRef p = CFNumberCreate(kCFAllocatorDefault, kCFNumberShortType, &product);
+    CFDictionarySetValue(matching, CFSTR(kIOHIDProductIDKey), p);
+    CFRelease(p);
+    
+    dispatch_async(dispatch_queue_create(NULL, NULL), ^{
+        // Create an IO HID manager
+        IOHIDManagerRef hidMgr = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
+        if (hidMgr) {
+            self->ioHIDManager = hidMgr;
+            IOHIDManagerScheduleWithRunLoop(hidMgr, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+        } else {
+            printf("Cannot create ioHIDManager\n");
+            return;
+        }
+        self->seenDevices = [NSMutableArray new];
+        self->hidLock = [[NSLock alloc] init];
+        self->stop = NO;
+        
+        while (!self->stop) {
+            // sleep 100ms
+            usleep(1000 * 100);
+            CFRetain(matching);
+            
+            [self->hidLock lock];
+            IOHIDManagerSetDeviceMatching(hidMgr, matching);
+            if (matching != NULL) {
+                CFRelease(matching);
+            }
+            
+            // Get devices
+            CFSetRef device_set = IOHIDManagerCopyDevices(hidMgr);
+            if (device_set != NULL) {
+                // Iterate over each device
+                CFIndex num_devices = CFSetGetCount(device_set);
+                IOHIDDeviceRef *device_array = (IOHIDDeviceRef*) calloc(num_devices, sizeof(IOHIDDeviceRef));
+                CFSetGetValues(device_set, (const void **)device_array);
+                for (NSUInteger i = self->seenDevices.count; i < num_devices; i++) {
+                    IOHIDDeviceRef devref = device_array[i];
+                    if (!devref) {
+                        continue;
+                    }
+                    
+                    HIDDeviceData * device_data = [[HIDDeviceData alloc] init];
+                    device_data.vendorID = vendor;
+                    device_data.productID = product;
+                    device_data.deviceset_index = i;
+                    device_data.name = self->name;
+                    device_data.manufacturer = self->manufacturer;
+                    
+                    NSString * uniqueID = [NSString stringWithFormat:@"%04x-%04x-%lu", vendor, product, (unsigned long)i];
+                    [self->seenDevices addObject:uniqueID];
+                    
+                    io_object_t iokit_dev = IOHIDDeviceGetService(devref);
+                    io_string_t path;
+                    kern_return_t res = IORegistryEntryGetPath(iokit_dev, kIOServicePlane, path);
+                    if (res == KERN_SUCCESS) {
+                        memcpy(*[device_data getPathRef], path, sizeof(path));
+                        device_data.servicePath = [NSString stringWithFormat:@"%s", path];
+                    } else {
+                        fprintf(stderr, "Cannot get device path: vendor 0x%04x, product 0x%04x\n", vendor, product);
+                    }
+                    
+                    int is_usb_hid = get_int_property(devref, CFSTR(kUSBInterfaceClass)) == kUSBHIDClass;
+                    if (is_usb_hid) {
+                        device_data.usbdev = dev;
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            HIDDenialPolicy policy = [instance addedHIDDevice:device_data];
+                            device_data.policy = policy;
+                            if (policy != Allow) {
+                                [instance denyDevice:device_data];
+                            }
+                        });
+                    }
+                }
+                
+                free(device_array);
+                CFRelease(device_set);
+                
+                [self->hidLock unlock];
+            }
+        }
+    });
+}
+
 @end
 
 void HIDRawDeviceAdded(void *refCon, io_iterator_t iterator) {
@@ -81,76 +216,12 @@ void HIDRawDeviceAdded(void *refCon, io_iterator_t iterator) {
         name = getUSBStringDescriptor(dev, nameIndex);
         manufacturer = getUSBStringDescriptor(dev, manufacturerIndex);
         
-        // Try to match HID S by vendor ID and product ID
-        CFMutableDictionaryRef matching = CFDictionaryCreateMutable(kCFAllocatorDefault,
-                                                                    kIOHIDOptionsTypeNone,
-                                                                    &kCFTypeDictionaryKeyCallBacks,
-                                                                    &kCFTypeDictionaryValueCallBacks);
-        CFNumberRef v = CFNumberCreate(kCFAllocatorDefault, kCFNumberShortType, &vendor);
-        CFDictionarySetValue(matching, CFSTR(kIOHIDVendorIDKey), v);
-        CFRelease(v);
-        CFNumberRef p = CFNumberCreate(kCFAllocatorDefault, kCFNumberShortType, &product);
-        CFDictionarySetValue(matching, CFSTR(kIOHIDProductIDKey), p);
-        CFRelease(p);
-        IOHIDManagerRef hidMgr = [instance getIOHIDManager];
-        IOHIDManagerSetDeviceMatching(hidMgr, matching);
-        if (matching != NULL) {
-            CFRelease(matching);
-        }
-        
-        // Get devices
-        CFSetRef device_set = IOHIDManagerCopyDevices(hidMgr);
-        if (device_set == NULL) {
-            fprintf(stderr, "Cannot get device set for device: vendor 0x%04x, product 0x%04x\n", vendor, product);
-            continue;
-        }
-        
-        // Iterate over each device
-        CFIndex num_devices = CFSetGetCount(device_set);
-        IOHIDDeviceRef *device_array = (IOHIDDeviceRef*) calloc(num_devices, sizeof(IOHIDDeviceRef));
-        CFSetGetValues(device_set, (const void **)device_array);
-        for (int i = 0; i < num_devices; i++) {
-            IOHIDDeviceRef devref = device_array[i];
-            if (!devref) {
-                continue;
-            }
-            
-            HIDDeviceData * device_data = [[HIDDeviceData alloc] init];
-            device_data.vendorID = vendor;
-            device_data.productID = product;
-            device_data.deviceset_index = i;
-            if (name) {
-                device_data.name = [NSString stringWithFormat:@"%s", name];
-            }
-            if (manufacturer) {
-                device_data.manufacturer = [NSString stringWithFormat:@"%s", manufacturer];
-            }
-            
-            io_object_t iokit_dev = IOHIDDeviceGetService(devref);
-            io_string_t path;
-            kern_return_t res = IORegistryEntryGetPath(iokit_dev, kIOServicePlane, path);
-            if (res == KERN_SUCCESS) {
-                memcpy(*[device_data getPathRef], path, sizeof(path));
-                device_data.servicePath = [NSString stringWithFormat:@"%s", path];
-            } else {
-                fprintf(stderr, "Cannot get device path: vendor 0x%04x, product 0x%04x\n", vendor, product);
-            }
-            
-            int is_usb_hid = get_int_property(devref, CFSTR(kUSBInterfaceClass)) == kUSBHIDClass;
-            if (is_usb_hid) {
-                device_data.usbdev = dev;
-                HIDDenialPolicy policy = [instance addedHIDDevice:device_data];
-                device_data.policy = policy;
-                if (policy != Allow) {
-                    [instance denyDevice:device_data];
-                }
-            }
-        }
-        
+        ContinuousHIDWatching * watching = [[ContinuousHIDWatching alloc] init];
+        [watching setDeviceName:name manufacturer:manufacturer];
+        [watching startMonitoringDevice:dev Vendor:vendor product:product];
+
         if (name) free((void *)name);
         if (manufacturer) free((void *)manufacturer);
-        free(device_array);
-        CFRelease(device_set);
     }
 }
 
@@ -209,25 +280,10 @@ void HIDRawDeviceRemoved(void *refCon, io_iterator_t iterator) {
         return NO;
     }
     
-    // Create an IO HID manager
-    ioHIDManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
-    if (ioHIDManager) {
-        IOHIDManagerSetDeviceMatching(ioHIDManager, NULL);
-        IOHIDManagerScheduleWithRunLoop(ioHIDManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-    } else {
-        if (err) {
-            *err = [NSError errorWithDomain:NSCocoaErrorDomain code:1 userInfo:@{
-                NSDebugDescriptionErrorKey: @"Couldn’t create an IOHIDManager"
-            }];
-        }
-        mach_port_deallocate(mach_task_self(), masterPort);
-        masterPort = 0;
-        return NO;
-    }
-    
     ioNotifyPort = IONotificationPortCreate(masterPort);
     runLoopSource = IONotificationPortGetRunLoopSource(ioNotifyPort);
-    CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, kCFRunLoopDefaultMode);
+    
+    CFRunLoopAddSource(CFRunLoopGetMain(), runLoopSource, kCFRunLoopDefaultMode);
     
     // Retain additional dictionary references because each call to
     // IOServiceAddMatchingNotification consumes one reference
@@ -260,6 +316,7 @@ void HIDRawDeviceRemoved(void *refCon, io_iterator_t iterator) {
     // arm the notification
     HIDRawDeviceRemoved(NULL, rawRemovedIter);
     
+    
     // Finished with master port
     mach_port_deallocate(mach_task_self(), masterPort);
     masterPort = 0;
@@ -271,13 +328,6 @@ void HIDRawDeviceRemoved(void *refCon, io_iterator_t iterator) {
 
 - (void)stop {
     if (!started) return;
-    
-    if (ioHIDManager) {
-        // Close the HID manager
-        IOHIDManagerClose(ioHIDManager, kIOHIDOptionsTypeNone);
-        CFRelease(ioHIDManager);
-        ioHIDManager = NULL;
-    }
     
     CFRunLoopRemoveSource(CFRunLoopGetCurrent(), runLoopSource, kCFRunLoopDefaultMode);
     started = NO;
@@ -334,10 +384,6 @@ void HIDRawDeviceRemoved(void *refCon, io_iterator_t iterator) {
     }
 }
 
-- (IOHIDManagerRef)getIOHIDManager {
-    return ioHIDManager;
-}
-
 - (HIDDenialPolicy)addedHIDDevice:(HIDDeviceData *)dev {
     if (self.delegate) {
         return [self.delegate HIDDeviceAdded:dev];
@@ -352,3 +398,4 @@ void HIDRawDeviceRemoved(void *refCon, io_iterator_t iterator) {
 }
 
 @end
+
