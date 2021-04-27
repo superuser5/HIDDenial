@@ -9,6 +9,9 @@
 #import "HIDDenial.h"
 #import "HIDDeviceData.h"
 #import "HIDDeviceTableCellView.h"
+#import <unistd.h>
+
+extern const char** NXArgv;
 
 @interface ViewController() <NSTableViewDataSource, NSTableViewDelegate, HIDDenialDelegate, HIDDeviceTableCellDelegate>
 @property (strong, atomic) NSMutableArray<HIDDeviceData *> * devices;
@@ -19,6 +22,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+		[self checkPermission];
+
     self.devices = [NSMutableArray new];
     [self.HIDDeviceTableView setDataSource:self];
     [self.HIDDeviceTableView setDelegate:self];
@@ -58,6 +63,24 @@
             }
         }
     });
+}
+
+- (void)checkPermission {
+    uid_t uid = getuid();
+    if (uid != 0) {
+        NSString * command = [NSString stringWithFormat:@"sudo %s", NXArgv[0]];
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert addButtonWithTitle:@"Copy and Exit"];
+        [alert addButtonWithTitle:@"Ignore and Continue"];
+        [alert setMessageText:[NSString stringWithFormat:@"HIDDenial is not running with correct permissions. Please copy the following command and run HIDDenial as root:\n%@", command]];
+        [alert setAlertStyle:NSAlertStyleCritical];
+        if ([alert runModal] == 1000) {
+            NSPasteboard * pasteboard = [NSPasteboard generalPasteboard];
+            [pasteboard declareTypes:@[NSPasteboardTypeString] owner:nil];
+            [pasteboard setString:command forType:NSPasteboardTypeString];
+            [NSApp terminate:nil];
+        }
+    }
 }
 
 - (HIDDenialPolicy)getDefaultPolicyFromPopUp {
